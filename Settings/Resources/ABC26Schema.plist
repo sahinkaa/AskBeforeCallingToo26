@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>root</key>
+	<dict>
+		<key>items</key>
+		<array>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>AskBeforeCalling Too 26</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>key</key>
+				<string>enabled</string>
+				<key>label</key>
+				<string>Enabled</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>Ask Before</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>key</key>
+				<string>phoneCallsEnabled</string>
+				<key>label</key>
+				<string>Calls</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>key</key>
+				<string>messagesEnabled</string>
+				<key>label</key>
+				<string>Messages</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>key</key>
+				<string>emailEnabled</string>
+				<key>label</key>
+				<string>Emails</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>Confirmation</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<false/>
+				<key>key</key>
+				<string>swapButtonOrder</string>
+				<key>label</key>
+				<string>Swap Button Order</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSLinkCell</string>
+				<key>detail</key>
+				<string>ABCCustomStringsController</string>
+				<key>label</key>
+				<string>Custom Text</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>Whitelist — skip confirmation</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<false/>
+				<key>key</key>
+				<string>whitelistAllContacts</string>
+				<key>label</key>
+				<string>All Contacts for Calls</string>
+			</dict>
+			<dict>
+				<key>action</key>
+				<string>addContact</string>
+				<key>cell</key>
+				<string>PSButtonCell</string>
+				<key>label</key>
+				<string>Add Contact</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSLinkCell</string>
+				<key>detail</key>
+				<string>ABCTWhitelistController</string>
+				<key>label</key>
+				<string>Manage Contacts</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>key</key>
+				<string>messagesMatchAllRecipients</string>
+				<key>label</key>
+				<string>Messages: All Recipients Must Match</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>key</key>
+				<string>emailMatchAllRecipients</string>
+				<key>label</key>
+				<string>Emails: All Recipients Must Match</string>
+			</dict>
+		</array>
+	</dict>
+	<key>strings</key>
+	<dict>
+		<key>items</key>
+		<array>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>Title</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSEditTextCell</string>
+				<key>key</key>
+				<string>customTitle</string>
+				<key>placeholder</key>
+				<string>AskBeforeCalling Too 26</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>Calls</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSEditTextCell</string>
+				<key>key</key>
+				<string>customMessage</string>
+				<key>placeholder</key>
+				<string>Call {recipient}?</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>Messages</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSEditTextCell</string>
+				<key>key</key>
+				<string>customMessageForMessages</string>
+				<key>placeholder</key>
+				<string>Send message to {recipient}?</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>Emails</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSEditTextCell</string>
+				<key>key</key>
+				<string>customMessageForEmail</string>
+				<key>placeholder</key>
+				<string>Send email to {recipient}?</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>Confirm Button</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSEditTextCell</string>
+				<key>key</key>
+				<string>customYes</string>
+				<key>placeholder</key>
+				<string>Confirm</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>label</key>
+				<string>Cancel Button</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSEditTextCell</string>
+				<key>key</key>
+				<string>customCancel</string>
+				<key>placeholder</key>
+				<string>Cancel</string>
+			</dict>
+		</array>
+		<key>title</key>
+		<string>Custom Text</string>
+	</dict>
+	<key>translations</key>
+	<dict/>
+</dict>
+</plist>
