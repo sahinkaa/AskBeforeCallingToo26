@@ -11,7 +11,7 @@ export THEOS=/absolute/path/to/roothide/theos
 sh build.sh
 ```
 
-On another Mac, install Xcode and its command-line tools, Python 3, ldid and the native RootHide Theos checkout with its submodules; point `THEOS` at that checkout. Select Xcode as the developer directory. No downloaded system private headers are required. `Settings/vendor/Preferences.framework` contains only a minimal link stub and header for `PSViewController`; it is not packaged.
+On another Mac, install Xcode and its command-line tools, Python 3, ldid and the native RootHide Theos checkout with its submodules; point `THEOS` at that checkout. Select Xcode as the developer directory. No downloaded system private headers are required. `Settings/vendor/Preferences.framework` contains only a minimal link stub; it is not packaged. The `PSViewController` header comes from Theos’s standard headers submodule.
 
 `build.sh` runs both host suites with AddressSanitizer and UndefinedBehaviorSanitizer, compiles the engine and preference bundle, signs them, normalizes archive ownership to root:wheel and validates the resulting `.deb`.
 
