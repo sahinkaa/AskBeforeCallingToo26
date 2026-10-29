@@ -3,7 +3,7 @@
 #import <Contacts/Contacts.h>
 #import <ContactsUI/ContactsUI.h>
 #import <CoreFoundation/CoreFoundation.h>
-#import <roothide.h>
+#import "../ABTPaths.h"
 #import "ABC26Model.h"
 #import "ABC26Store.h"
 
@@ -66,7 +66,7 @@ static void ABC26Alert(UIViewController *controller, NSString *message) {
         NSString *path = [[NSBundle bundleForClass:ABC26PaneController.class] pathForResource:@"ABC26Schema" ofType:@"plist"];
         self.schema = path ? [NSDictionary dictionaryWithContentsOfFile:path] : @{};
     }
-    if (!self.store) self.store = [[ABC26Store alloc] initWithPath:jbroot(@"/var/mobile/Library/Preferences/net.tateu.askbeforecallingtoo11.plist") schema:self.schema];
+    if (!self.store) self.store = [[ABC26Store alloc] initWithPath:ABTPath(@"/var/mobile/Library/Preferences/net.tateu.askbeforecallingtoo11.plist") schema:self.schema];
     if ([self.page isEqual:@"root"]) {
         self.title = @"AskBeforeCalling Too 26";
         UILabel *footer = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 90)];
@@ -111,7 +111,7 @@ static void ABC26Alert(UIViewController *controller, NSString *message) {
     [self.settingsTable reloadData];
     NSUInteger rows = 0; for (NSDictionary *group in self.groups) rows += [group[@"rows"] count];
     NSDictionary *report = @{@"build": @"1.0", @"page": self.page, @"rows": @(rows), @"preferencesPath": self.store.path, @"preferencesReadable": @(values != nil), @"schemaLoaded": @([self.schema[@"root"][@"items"] count] > 0)};
-    NSString *logs = jbroot(@"/var/mobile/Library/Logs");
+    NSString *logs = ABTPath(@"/var/mobile/Library/Logs");
     [NSFileManager.defaultManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
     [report writeToFile:[logs stringByAppendingPathComponent:@"AskBeforeCalling26-Settings.plist"] atomically:YES];
 }
