@@ -1,9 +1,10 @@
 #ifdef ABT_HOST_TEST
 #import "HostRuntime.h"
+#import "../ABTPaths.h"
 #else
 #import <UIKit/UIKit.h>
 #import <Contacts/Contacts.h>
-#import <roothide.h>
+#import "../ABTPaths.h"
 #import <substrate.h>
 #import <mach-o/dyld.h>
 #include <dlfcn.h>
@@ -49,12 +50,12 @@ static void ABTRecord(NSString *key, id value) {
     ABTReport[key] = value;
     ABTReport[@"build"] = @"1.0";
     ABTReport[@"process"] = NSBundle.mainBundle.bundleIdentifier ?: NSProcessInfo.processInfo.processName;
-    NSString *dir = jbroot(@"/var/mobile/Library/Logs");
+    NSString *dir = ABTPath(@"/var/mobile/Library/Logs");
     [NSFileManager.defaultManager createDirectoryAtPath:dir withIntermediateDirectories:YES attributes:nil error:nil];
     [ABTReport writeToFile:[dir stringByAppendingPathComponent:[NSString stringWithFormat:@"AskBeforeCallingToo26-%@.plist", ABTReport[@"process"]]] atomically:YES];
 }
 static NSDictionary *ABTSettings(void) {
-    NSDictionary *stored = [[[ABC26Store alloc] initWithPath:jbroot(ABTPrefs) schema:@{}] read:nil];
+    NSDictionary *stored = [[[ABC26Store alloc] initWithPath:ABTPath(ABTPrefs) schema:@{}] read:nil];
     // On malformed preferences, keep the three protections enabled and ignore the whitelist.
     NSMutableDictionary *settings = [@{@"enabled":@YES, @"phoneCallsEnabled":@YES, @"messagesEnabled":@YES, @"emailEnabled":@YES, @"messagesMatchAllRecipients":@YES, @"emailMatchAllRecipients":@YES} mutableCopy];
     for (NSString *key in settings.allKeys) if ([stored[key] isKindOfClass:NSNumber.class]) settings[key] = @([stored[key] boolValue]);
@@ -174,7 +175,7 @@ static void ABTAsk(NSString *kind, NSDictionary *settings, NSArray *recipients, 
     if (ABTPending) { ABTRecord(@"duplicateBlocked",@YES); reply(NO); return; }
     ABTTransaction *transaction = [ABTTransaction new]; transaction.decision = [ABTDecision new]; transaction.reply = reply; ABTPending = transaction;
     ABTRecord(@"reached",kind);
-    // Whitelist lookups do not block the UI, and nothing is forwarded while they run.
+    // Whitelist lookups do not block the UI and nothing is forwarded while they run.
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED,0), ^{
         BOOL calls = [kind isEqual:@"calls"];
         BOOL allContacts = calls && [settings[@"whitelistAllContacts"] boolValue];
