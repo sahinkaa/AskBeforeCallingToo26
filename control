@@ -1,0 +1,11 @@
+Package: com.sahinkaa.askbeforecallingtoo26
+Name: AskBeforeCalling Too 26
+Version: 1.0
+Architecture: iphoneos-arm64e
+Description: Confirm before making calls or sending messages and emails.
+Author: sahinkaa
+Maintainer: sahinkaa
+Section: Tweaks
+Depends: firmware (>= 26.0), mobilesubstrate, preferenceloader
+Conflicts: net.tateu.askbeforecallingtoo, net.tateu.askbeforecallingtoo11, net.tateu.askbeforecallingtoo13
+Replaces: net.tateu.askbeforecallingtoo, net.tateu.askbeforecallingtoo11, net.tateu.askbeforecallingtoo13

@@ -1,0 +1,1 @@
+{ Filter = { Bundles = ( "com.apple.mobilephone", "com.apple.facetime", "com.apple.MobileAddressBook", "com.apple.ContactsUI.ContactsViewService", "com.apple.ContactsUI.ContactViewViewService", "com.apple.MobileSMS", "com.apple.mobilesms.compose", "com.apple.mobilemail", "com.apple.MailCompositionService" ); }; }
