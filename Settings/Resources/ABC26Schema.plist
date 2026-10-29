@@ -86,7 +86,7 @@
 				<key>cell</key>
 				<string>PSGroupCell</string>
 				<key>label</key>
-				<string>Whitelist — skip confirmation</string>
+				<string>Whitelist - skip confirmation</string>
 			</dict>
 			<dict>
 				<key>cell</key>
