@@ -3,7 +3,7 @@ Name: AskBeforeCalling Too 26
 Version: 1.0
 Architecture: iphoneos-arm64e
 Description: Confirm before making calls or sending messages and emails.
-Author: sahinkaa
+Author: tateu • sahinkaa
 Maintainer: sahinkaa
 Section: Tweaks
 Depends: firmware (>= 26.0), mobilesubstrate, preferenceloader

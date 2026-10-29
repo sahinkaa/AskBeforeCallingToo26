@@ -125,10 +125,19 @@ def signatures(blob):
 def main():
     path = Path(sys.argv[1])
     (control, cm), (data, dm) = deb(path)
+    scheme = sys.argv[2] if len(sys.argv) > 2 else ('roothide' if path.name.endswith('_iphoneos-arm64e.deb') else 'rootless')
+    assert scheme in ('rootless', 'roothide')
+    native = scheme == 'roothide'
+    payload_files = sorted(data)
+    if not native:
+        assert all(name.startswith('var/jb/') for name in data), 'rootless payload must be inside /var/jb'
+        data = {name.removeprefix('var/jb/'): value for name, value in data.items()}
     assert set(control) == {'control'}, 'No install scripts expected'
     fields = dict(line.split(': ', 1) for line in control['control'].decode().splitlines() if ': ' in line)
     assert fields['Package'] == 'com.sahinkaa.askbeforecallingtoo26'
-    assert fields['Version'] == '1.0' and fields['Architecture'] == 'iphoneos-arm64e'
+    assert fields['Version'] == '1.0' and fields['Architecture'] == ('iphoneos-arm64e' if native else 'iphoneos-arm64')
+    assert fields['Author'] == 'tateu • sahinkaa'
+    assert fields['Maintainer'] == 'sahinkaa'
     assert 'rootless-compat' not in str(fields) and 'net.tateu.askbeforecallingtoo13' in fields['Conflicts']
     bundle = 'Library/PreferenceBundles/AskBeforeCallingToo26Prefs.bundle/'
     pane = bundle+'AskBeforeCallingToo26Prefs'
@@ -151,20 +160,39 @@ def main():
     assert keys == {'enabled','phoneCallsEnabled','messagesEnabled','emailEnabled','swapButtonOrder','whitelistAllContacts','messagesMatchAllRecipients','emailMatchAllRecipients','customTitle','customMessage','customMessageForMessages','customMessageForEmail','customYes','customCancel'}
     binaries = {}
     for name in [engine,pane]:
-        image = slices(data[name])[0x80000002]
-        dependencies = []
-        for cmd,pos,size in commands(image):
-            if cmd in (0xc,0x80000018):
-                start = pos+struct.unpack_from('<I',image,pos+8)[0]
-                dependencies.append(image[start:image.index(0,start,pos+size)].decode())
-            if cmd == 0x32:
-                platform,minos = struct.unpack_from('<II',image,pos+8)
-                assert platform == 2 and minos == 0x1a0000
-        assert '@loader_path/.jbroot/usr/lib/libroothide.dylib' in dependencies
-        assert not any('/Users/' in dep or '/var/jb' in dep or 'AddressBookUI' in dep for dep in dependencies)
-        assert b'PSListController' not in image
-        binaries[name] = {'sha256':hashlib.sha256(data[name]).hexdigest(),'dependencies':dependencies,'signatures':signatures(data[name])}
-    assert '@loader_path/.jbroot/usr/lib/libsubstrate.dylib' in binaries[engine]['dependencies']
+        images = slices(data[name])
+        assert set(images) == ({0x80000002} if native else {0,0x80000002})
+        architecture_checks = []
+        common_dependencies = None
+        for subtype,image in images.items():
+            dependencies, rpaths = [], []
+            deployment = False
+            for cmd,pos,size in commands(image):
+                if cmd in (0xc,0x80000018):
+                    start = pos+struct.unpack_from('<I',image,pos+8)[0]
+                    dependencies.append(image[start:image.index(0,start,pos+size)].decode())
+                if cmd == 0x8000001c:
+                    start = pos+struct.unpack_from('<I',image,pos+8)[0]
+                    rpaths.append(image[start:image.index(0,start,pos+size)].decode())
+                if cmd == 0x32:
+                    platform,minos = struct.unpack_from('<II',image,pos+8)
+                    assert platform == 2 and minos == 0x1a0000
+                    deployment = True
+            assert deployment, 'missing deployment command'
+            assert not any('/Users/' in dep or 'AddressBookUI' in dep for dep in dependencies)
+            if native:
+                assert '@loader_path/.jbroot/usr/lib/libroothide.dylib' in dependencies
+                assert not any('/var/jb' in dep for dep in dependencies)
+                if name == engine: assert '@loader_path/.jbroot/usr/lib/libsubstrate.dylib' in dependencies
+            else:
+                assert not any('libroothide' in dep for dep in dependencies)
+                assert any(r.startswith('/var/jb/') for r in rpaths)
+                if name == engine: assert '@rpath/CydiaSubstrate.framework/CydiaSubstrate' in dependencies
+            assert b'PSListController' not in image
+            if common_dependencies is None: common_dependencies = dependencies
+            else: assert dependencies == common_dependencies, 'architecture dependencies differ'
+            architecture_checks.append({'cpu_subtype':hex(subtype),'dependencies':dependencies,'rpaths':rpaths})
+        binaries[name] = {'sha256':hashlib.sha256(data[name]).hexdigest(),'architectures':architecture_checks,'signatures':signatures(data[name])}
     assert b'_dialWithRequest:completion:' in data[engine] and b'sendComposition:animations:' in data[engine] and b'performSend:' in data[engine]
     assert b'_openURL:options:openApplicationEndpoint:completionHandler:' in data[engine] and b'_openURL:' in data[engine]
     assert b'launchAppForDialRequest:completion:' in data[engine]
@@ -176,6 +204,6 @@ def main():
     assert b'NSExtensionContext' in data[engine] and b'openURL:completionHandler:' in data[engine]
     for bundle in ['com.apple.MobileAddressBook','com.apple.ContactsUI.ContactsViewService','com.apple.ContactsUI.ContactViewViewService']:
         assert bundle.encode() in data[engine], 'contact process missing from runtime predicate'
-    print(json.dumps({'package':path.name,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'control':fields,'binaries':binaries,'payload_files':sorted(data),'result':'PASS: package structure, native arm64e ABI, code-page hashes, RootHide dependencies and settings schema. Device behavior not verified.'},indent=2))
+    print(json.dumps({'package':path.name,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'scheme':scheme,'control':fields,'binaries':binaries,'payload_files':payload_files,'result':'PASS: package structure, architecture slices, code-page hashes, jailbreak dependencies and settings schema. Device behavior not verified.'},indent=2))
 
 if __name__ == '__main__': main()

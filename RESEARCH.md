@@ -25,3 +25,7 @@ The injection filter covers the supported app and contact-service processes. No 
 ## Verification
 
 Host tests compile the actual runtime hooks against isolated UIKit/Contacts doubles with AddressSanitizer and UndefinedBehaviorSanitizer. They exercise confirmation, cancellation, repeats, callbacks, foreground state, preserved targets/options, emergency behavior, settings persistence and whitelist matching. Offline package checks validate archive paths, ownership, architecture, deployment target, RootHide dependencies and signed code-page hashes. These checks complement device testing; they do not establish compatibility outside the tested setup documented in README.md.
+
+## Package variants
+
+The same confirmation engine and preference store compile for rootless and RootHide. `ABTPaths.h` selects libroot path conversion for standard rootless or native `jbroot` for RootHide. Only build configuration, path resolution and package metadata differ between variants. Rootless ships both arm64 and modern arm64e slices under `/var/jb`; RootHide ships native modern arm64e. Both packages use the author display `tateu • sahinkaa` with the U+2022 bullet. The maintainer remains sahinkaa. Settings are reread for each action, so changing them does not require a respring.
