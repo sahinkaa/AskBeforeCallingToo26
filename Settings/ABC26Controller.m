@@ -109,11 +109,7 @@ static void ABC26Alert(UIViewController *controller, NSString *message) {
         self.navigationItem.rightBarButtonItem.enabled = self.contactIdentifiers.count > 0;
     }
     [self.settingsTable reloadData];
-    NSUInteger rows = 0; for (NSDictionary *group in self.groups) rows += [group[@"rows"] count];
-    NSDictionary *report = @{@"build": @"1.0", @"page": self.page, @"rows": @(rows), @"preferencesPath": self.store.path, @"preferencesReadable": @(values != nil), @"schemaLoaded": @([self.schema[@"root"][@"items"] count] > 0)};
-    NSString *logs = ABTPath(@"/var/mobile/Library/Logs");
-    [NSFileManager.defaultManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
-    [report writeToFile:[logs stringByAppendingPathComponent:@"AskBeforeCalling26-Settings.plist"] atomically:YES];
+
 }
 - (id)valueForSetting:(NSString *)key {
     id value = self.settings[key];

@@ -29,7 +29,9 @@ static BOOL ABTCallsBundle(NSString *bundle) {
 }
 
 static NSString *const ABTPrefs = @"/var/mobile/Library/Preferences/net.tateu.askbeforecallingtoo11.plist";
+#if defined(ABT_HOST_TEST)
 static NSMutableDictionary *ABTReport;
+#endif
 static BOOL ABTCallsProcess, ABTMessagesProcess, ABTMailProcess, ABTContactServiceProcess;
 static BOOL ABTForegroundCallUI(void) {
     UIApplication *app = UIApplication.sharedApplication;
@@ -44,6 +46,7 @@ static BOOL ABTForegroundCallUI(void) {
     }
     return NO;
 }
+#if defined(ABT_HOST_TEST)
 static void ABTRecord(NSString *key, id value) {
     if (!NSThread.isMainThread) { dispatch_async(dispatch_get_main_queue(), ^{ ABTRecord(key,value); }); return; }
     if (!ABTReport) ABTReport = [NSMutableDictionary new];
@@ -54,6 +57,10 @@ static void ABTRecord(NSString *key, id value) {
     [NSFileManager.defaultManager createDirectoryAtPath:dir withIntermediateDirectories:YES attributes:nil error:nil];
     [ABTReport writeToFile:[dir stringByAppendingPathComponent:[NSString stringWithFormat:@"AskBeforeCallingToo26-%@.plist", ABTReport[@"process"]]] atomically:YES];
 }
+#else
+static inline __attribute__((unused)) void ABTRecord(NSString *key, id value) { (void)key; (void)value; }
+#define ABTRecord(...) ((void)sizeof((ABTRecord(__VA_ARGS__), 0)))
+#endif
 static NSDictionary *ABTSettings(void) {
     NSDictionary *stored = [[[ABC26Store alloc] initWithPath:ABTPath(ABTPrefs) schema:@{}] read:nil];
     // On malformed preferences, keep the three protections enabled and ignore the whitelist.
